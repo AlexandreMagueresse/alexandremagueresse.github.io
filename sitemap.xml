@@ -2,12 +2,6 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
-    <loc>https://alexandremagueresse.github.io/index.html</loc>
-    <lastmod>2025-01-23</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-</url>
-<url>
     <loc>https://alexandremagueresse.github.io/curriculum_vitae/index.html</loc>
     <lastmod>2025-01-23</lastmod>
     <changefreq>monthly</changefreq>
@@ -15,6 +9,12 @@
 </url>
 <url>
     <loc>https://alexandremagueresse.github.io/research/index.html</loc>
+    <lastmod>2025-01-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>https://alexandremagueresse.github.io/index.html</loc>
     <lastmod>2025-01-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
