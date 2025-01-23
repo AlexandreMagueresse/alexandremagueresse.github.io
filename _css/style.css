@@ -53,11 +53,11 @@ html {
     line-height: 1.5em;
     position: relative;
     margin: 0 auto;
-    padding-left: 10%;
-    padding-right: 10%;
+    padding-left: 20%;
+    padding-right: 20%;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
     .franklin-content {
         padding-left: 5%;
         padding-right: 5%;
@@ -76,6 +76,10 @@ html {
 .franklin-content a:hover {
     color: var(--link-text-color);
     text-decoration: underline;
+}
+.franklin-content hr {
+    border: none;
+    border-top: 1px solid var(--separator-color);
 }
 
 /* === Toc === */
@@ -114,20 +118,12 @@ html {
     text-align: center;
 }
 
-@media (max-width: 480px) {
-    .main-header {
-        padding-left: 5%;
-        padding-right: 5%;
-    }
-}
-
 .main-header .blog-name {
     width: 35%;
     float: left;
     text-align: left;
     margin: 0 auto;
     padding: 0;
-    
 }
 
 .main-header .main-menu {
@@ -135,6 +131,23 @@ html {
     text-align: right;
     margin: 0 auto;
     padding: 0;
+}
+
+@media (max-width: 768px) {
+    .main-header {
+        padding-left: 5%;
+        padding-right: 5%;
+    }
+    .main-header .blog-name {
+        width: 100%;
+        float: center;
+        text-align: center;
+    }
+    .main-header .main-menu {
+        width: 100%;
+        float: center;
+        text-align: center;
+    }
 }
 
 /* === Titles === */
@@ -177,7 +190,7 @@ html {
     border-bottom: 1px solid var(--separator-color);
 }
 
-/* Blockquotes */
+/* === Blockquotes === */
 .franklin-content blockquote {
     font-style: italic;
     background: var(--comment-background-color);
@@ -188,8 +201,54 @@ html {
   
 .franklin-content blockquote p {
     display: inline;
-}  
+}
 
+/* === Columns === */
+.franklin-content .row {
+    display: flex;
+}
+
+.franklin-content .row:after {
+    content: "";
+    clear: both;
+}
+
+.franklin-content .column {
+    padding: 1em;
+    width: 50%;
+}
+
+.franklin-content .column-left {
+    padding: 1em;
+    width: 25%;
+}
+
+.franklin-content .column-right {
+    padding: 1em;
+    width: 75%;
+}
+
+@media (max-width: 768px) {
+    .franklin-content .row {
+        flex-wrap: wrap;
+    }
+    .franklin-content .column {
+        width: 100%;
+    }
+    .franklin-content .column-left {
+        width: 100%;
+    }
+    .franklin-content .column-right {
+        width: 100%;
+    }
+}
+
+/* === Images === */
+.franklin-content img {
+    width: 100%;
+    text-align: center;
+    padding: 0;
+}
 
 /* === KaTeX === */
 body { counter-reset: eqnum; }
@@ -265,5 +324,3 @@ body { counter-reset: eqnum; }
     color: var(--footer-text-color);
     text-decoration: underline;
 }
-
-/* header, div.blog-name, nav ul li a .active img#menu-icon */
