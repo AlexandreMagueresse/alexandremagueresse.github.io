@@ -23,6 +23,27 @@
 
 <item>
   <title>
+    <![CDATA[  Curriculum Vitae  ]]>
+  </title>
+  <link> https://alexandremagueresse.github.io/curriculum_vitae/index.html </link>
+  <guid> https://alexandremagueresse.github.io/curriculum_vitae/index.html </guid>
+  <description>
+    <![CDATA[  Curriculum Vitae  ]]>
+  </description>  
+    
+  <pubDate>Fri, 24 Jan 2025 00:00:00 +0000</pubDate>  
+  
+  <author> alexandre.magueresse@gmail.com </author>
+  
+  
+  <atom:author>
+    <atom:name>Alexandre Magueresse</atom:name>
+  </atom:author>
+        
+</item>
+
+<item>
+  <title>
     <![CDATA[  Research  ]]>
   </title>
   <link> https://alexandremagueresse.github.io/research/index.html </link>
@@ -31,7 +52,7 @@
     <![CDATA[  Research  ]]>
   </description>  
     
-  <pubDate>Thu, 23 Jan 2025 00:00:00 +0000</pubDate>  
+  <pubDate>Fri, 24 Jan 2025 00:00:00 +0000</pubDate>  
   
   <author> alexandre.magueresse@gmail.com </author>
   
@@ -52,28 +73,7 @@
     <![CDATA[  Alexandre Magueresse  ]]>
   </description>  
     
-  <pubDate>Thu, 23 Jan 2025 00:00:00 +0000</pubDate>  
-  
-  <author> alexandre.magueresse@gmail.com </author>
-  
-  
-  <atom:author>
-    <atom:name>Alexandre Magueresse</atom:name>
-  </atom:author>
-        
-</item>
-
-<item>
-  <title>
-    <![CDATA[  Curriculum Vitae  ]]>
-  </title>
-  <link> https://alexandremagueresse.github.io/curriculum_vitae/index.html </link>
-  <guid> https://alexandremagueresse.github.io/curriculum_vitae/index.html </guid>
-  <description>
-    <![CDATA[  Curriculum Vitae  ]]>
-  </description>  
-    
-  <pubDate>Wed, 22 Jan 2025 00:00:00 +0000</pubDate>  
+  <pubDate>Fri, 24 Jan 2025 00:00:00 +0000</pubDate>  
   
   <author> alexandre.magueresse@gmail.com </author>
   
