@@ -31,28 +31,7 @@
     <![CDATA[  Curriculum Vitae  ]]>
   </description>  
     
-  <pubDate>Fri, 24 Jan 2025 00:00:00 +0000</pubDate>  
-  
-  <author> alexandre.magueresse@gmail.com </author>
-  
-  
-  <atom:author>
-    <atom:name>Alexandre Magueresse</atom:name>
-  </atom:author>
-        
-</item>
-
-<item>
-  <title>
-    <![CDATA[  Research  ]]>
-  </title>
-  <link> https://alexandremagueresse.github.io/research/index.html </link>
-  <guid> https://alexandremagueresse.github.io/research/index.html </guid>
-  <description>
-    <![CDATA[  Research  ]]>
-  </description>  
-    
-  <pubDate>Fri, 24 Jan 2025 00:00:00 +0000</pubDate>  
+  <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>  
   
   <author> alexandre.magueresse@gmail.com </author>
   
@@ -73,7 +52,70 @@
     <![CDATA[  Alexandre Magueresse  ]]>
   </description>  
     
-  <pubDate>Fri, 24 Jan 2025 00:00:00 +0000</pubDate>  
+  <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>  
+  
+  <author> alexandre.magueresse@gmail.com </author>
+  
+  
+  <atom:author>
+    <atom:name>Alexandre Magueresse</atom:name>
+  </atom:author>
+        
+</item>
+
+<item>
+  <title>
+    <![CDATA[  Method of small steps  ]]>
+  </title>
+  <link> https://alexandremagueresse.github.io/notes/small_steps/index.html </link>
+  <guid> https://alexandremagueresse.github.io/notes/small_steps/index.html </guid>
+  <description>
+    <![CDATA[  Method of small steps  ]]>
+  </description>  
+    
+  <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>  
+  
+  <author> alexandre.magueresse@gmail.com </author>
+  
+  
+  <atom:author>
+    <atom:name>Alexandre Magueresse</atom:name>
+  </atom:author>
+        
+</item>
+
+<item>
+  <title>
+    <![CDATA[  Cesàro&#39;s lemma  ]]>
+  </title>
+  <link> https://alexandremagueresse.github.io/notes/cesaro/index.html </link>
+  <guid> https://alexandremagueresse.github.io/notes/cesaro/index.html </guid>
+  <description>
+    <![CDATA[  Cesàro&#39;s lemma  ]]>
+  </description>  
+    
+  <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>  
+  
+  <author> alexandre.magueresse@gmail.com </author>
+  
+  
+  <atom:author>
+    <atom:name>Alexandre Magueresse</atom:name>
+  </atom:author>
+        
+</item>
+
+<item>
+  <title>
+    <![CDATA[  Notes  ]]>
+  </title>
+  <link> https://alexandremagueresse.github.io/notes/index.html </link>
+  <guid> https://alexandremagueresse.github.io/notes/index.html </guid>
+  <description>
+    <![CDATA[  Notes  ]]>
+  </description>  
+    
+  <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>  
   
   <author> alexandre.magueresse@gmail.com </author>
   
