@@ -309,6 +309,20 @@ body { counter-reset: eqnum; }
     border-bottom: none;
 }
 
+/* === Custom divs === */
+.proposition {
+    font-style: italic;
+    background: var(--comment-background-color);
+    margin: 1.5em 0.5em;
+    padding: 0.5em 0.5em;
+    border-left: 7px solid var(--comment-border-color);
+}
+
+.backtonote {
+    margin-top: 2em;
+    margin-bottom: -1em;
+}
+
 /* === Footer === */
 .franklin-content .page-foot {
     font-size: 0.8em;

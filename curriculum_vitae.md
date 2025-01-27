@@ -2,11 +2,11 @@
 title = "Curriculum Vitae"
 hasmath = false
 hascode = false
-date = Date(2025, 1, 24)
+date = Date(2025, 01, 27)
 
 rss_title = "Curriculum Vitae"
 rss_description = "Curriculum Vitae"
-rss_pubdate = Date(2025, 1, 24)
+rss_pubdate = Date(2025, 01, 27)
 
 tags = ["research"]
 +++
@@ -16,13 +16,15 @@ tags = ["research"]
 \tableofcontents
 
 ## Personal information
-
-* **Full** name: Alexandre Magueresse
+* **Full name**: Alexandre Magueresse
 * **Nationality**: French
+
+## Contact
 * **Institutional e-mail**: alexandre.magueresse@monash.edu
-* [Github](https://github.com/AlexandreMagueresse): AlexandreMagueresse
+* **Github**: [AlexandreMagueresse](https://github.com/AlexandreMagueresse)
+* **ORCID**: [0000-0002-6296-5399](https://orcid.org/0000-0002-6296-5399)
+* [LinkedIn](https://www.linkedin.com/in/alexandre-magueresse/?locale=en_US)
 * [Google Scholar](https://scholar.google.com/citations?hl=fr&user=AqaKsxwAAAAJ)
-* [ORCID](https://orcid.org/0000-0002-6296-5399): 0000-0002-6296-5399
 
 ## Academic training
 
@@ -55,8 +57,9 @@ tags = ["research"]
 * [Study of the automatic processing of natural languages applied to low-resource languages](https://arxiv.org/abs/2006.07264). Constitution and review of the state of the art by subtask (parts of speech tagging, dependency parsing, named entities recognition, tagging and linking, speech recognition, translation, classification, embedding) of NLP methods used in the context of low-resource languages; Proposals for new resources and research directions.
 
 ## Research interests
-* Functional analysis, Partial Differential Equations.
-* Finite Element Method, Virtual Element Method.
+* Functional analysis.
+* Partial differential equations, Finite element method, Virtual element method.
+* Ordinary differential equations, Numerical integration.
 * Nonlinear approximation.
 * Computational linear algebra, Preconditioning.
 * Scientific Machine Learning.
@@ -103,10 +106,11 @@ tags = ["research"]
 ## Other skills
 
 ### Languages
-* Native: French
-* Advanced: English (IELTS band 8.0), Spanish, Chinese (HSK 5)
-* Intermediate: German, Esperanto
-* Lower-intermediate: Russian
+* **Native**: French.
+* **Advanced**: English (IELTS band 8.0), Spanish, Chinese (HSK 5).
+* **Intermediate**: German, Esperanto.
+* **Lower-intermediate**: Russian.
 
 ### Programming languages
-* Julia, Python, Matlab.
+* **Advanced**: Julia, Python, Matlab.
+* **Some experience with**: C++, Fortran, OCaml.
