@@ -30,6 +30,9 @@ Global latex commands
 \newcommand{\RR}{\mathbb{R}}
 \newcommand{\CC}{\mathbb{C}}
 
+\newcommand{\mb}[1]{\boldsymbol{#1}}
+\newcommand{\mc}[1]{\mathcal{#1}}
+
 \newcommand{\sign}{\operatorname{sign}}
 \newcommand{\abs}[1]{\left|#1\right|}
 \newcommand{\floor}[1]{\left\lfloor#1 \right\rfloor}

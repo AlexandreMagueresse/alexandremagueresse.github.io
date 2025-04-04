@@ -16,9 +16,10 @@ tags = ["research"]
 
 # Notes
 
-This page gathers a few methods, results or examples that I find useful in my research.
+This page gathers a few methods, results or examples that I find interesting or useful in my research.
 
 ## Rate of convergence of sequences
 
 * [Cesaro's lemma](/notes/cesaro)
 * [Method of small steps](/notes/small_steps)
+* [ODE integrators](/notes/ode_integrators)
