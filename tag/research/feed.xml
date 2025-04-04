@@ -23,6 +23,27 @@
 
 <item>
   <title>
+    <![CDATA[  ODE integrators  ]]>
+  </title>
+  <link> https://alexandremagueresse.github.io/notes/ode_integrators/index.html </link>
+  <guid> https://alexandremagueresse.github.io/notes/ode_integrators/index.html </guid>
+  <description>
+    <![CDATA[  ODE integrators  ]]>
+  </description>  
+    
+  <pubDate>Mon, 31 Mar 2025 00:00:00 +0000</pubDate>  
+  
+  <author> alexandre.magueresse@gmail.com </author>
+  
+  
+  <atom:author>
+    <atom:name>Alexandre Magueresse</atom:name>
+  </atom:author>
+        
+</item>
+
+<item>
+  <title>
     <![CDATA[  Curriculum Vitae  ]]>
   </title>
   <link> https://alexandremagueresse.github.io/curriculum_vitae/index.html </link>
