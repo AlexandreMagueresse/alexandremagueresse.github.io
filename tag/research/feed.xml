@@ -23,12 +23,54 @@
 
 <item>
   <title>
-    <![CDATA[  ODE integrators  ]]>
+    <![CDATA[  Envelope of a family of curves  ]]>
+  </title>
+  <link> https://alexandremagueresse.github.io/notes/envelope/index.html </link>
+  <guid> https://alexandremagueresse.github.io/notes/envelope/index.html </guid>
+  <description>
+    <![CDATA[  Envelope of a family of curves  ]]>
+  </description>  
+    
+  <pubDate>Fri, 13 Jun 2025 00:00:00 +0000</pubDate>  
+  
+  <author> alexandre.magueresse@gmail.com </author>
+  
+  
+  <atom:author>
+    <atom:name>Alexandre Magueresse</atom:name>
+  </atom:author>
+        
+</item>
+
+<item>
+  <title>
+    <![CDATA[  Notions of continuity  ]]>
+  </title>
+  <link> https://alexandremagueresse.github.io/notes/continuity/index.html </link>
+  <guid> https://alexandremagueresse.github.io/notes/continuity/index.html </guid>
+  <description>
+    <![CDATA[  Notions of continuity  ]]>
+  </description>  
+    
+  <pubDate>Fri, 09 May 2025 00:00:00 +0000</pubDate>  
+  
+  <author> alexandre.magueresse@gmail.com </author>
+  
+  
+  <atom:author>
+    <atom:name>Alexandre Magueresse</atom:name>
+  </atom:author>
+        
+</item>
+
+<item>
+  <title>
+    <![CDATA[  Ordinary Differential Equations  ]]>
   </title>
   <link> https://alexandremagueresse.github.io/notes/ode_integrators/index.html </link>
   <guid> https://alexandremagueresse.github.io/notes/ode_integrators/index.html </guid>
   <description>
-    <![CDATA[  ODE integrators  ]]>
+    <![CDATA[  Ordinary Differential Equations  ]]>
   </description>  
     
   <pubDate>Mon, 31 Mar 2025 00:00:00 +0000</pubDate>  
