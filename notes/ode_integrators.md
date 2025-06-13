@@ -1,11 +1,11 @@
 +++
-title = "ODE integrators"
+title = "Ordinary Differential Equations"
 hasmath = true
 hascode = false
 date = Date(2025, 03, 31)
 
-rss_title = "ODE integrators"
-rss_description = "ODE integrators"
+rss_title = "Ordinary Differential Equations"
+rss_description = "Ordinary Differential Equations"
 rss_pubdate = Date(2025, 03, 31)
 
 tags = ["research"]
@@ -13,154 +13,189 @@ tags = ["research"]
 
 \backtonotes
 
-# General framework
+# Ordinary Differential Equations
 
-We consider the initial value problem
-$$\mb{u}(t_{0}) = \mb{u}_{0}, \qquad \mb{r}(t, \mb{u}, \dot{\mb{u}}) = \mb{0},$$
-where
-* $\mb{u}: \RR \to \RR^{n}$ is the unknown of the problem,
-* $t_{0} \in \RR$ is the initial time and $\mb{u}_{0} \in \RR^{n}$ is the initial condition,
-* $\mb{r}: \RR \times \RR^{n} \times \RR^{n} \to \RR^{n}$ is a discretised residual operator.
-We are willing to evolve $\mb{u}$ until $t_{F} > t_{0}$. We split the interval $\cc{t_{0}}{t_{F}}$ into sub-intervals $\cc{t_{n}}{t_{n+1}}$ and evolve the solution from $t_{n}$ to $t_{n+1}$ iteratively. More formally, we consider the following general framework:
-* The **encoder map** $\mc{E}: \RR^{n} \to \mc{S}$ embeds the initial condition into a state space $\mc{S}$,
-* The **update map** $\mc{U}: \RR_{+} \times \mc{S} \to \mc{S}$ evolves the state during one time interval $\cc{t_{n}}{t_{n+1}}$,
-* The **decoder map** $\mc{D}: \mc{S} \to \RR^{n}$ converts the state into the value of $\mb{u}$.
-We then consider the recurrence
-$$\mb{s}_{0} = \mc{E}(\mb{u}_{0}), \qquad \mb{s}_{n+1} = \mc{U}(h_{n}, \mb{s}_{n}), \qquad \mb{u}_{n} = \mc{D}(\mb{s}_{n}),$$
-where $h_{n} = t_{n+1} - t_{n}$. We want to design $(\mc{E}, \mc{U}, \mc{D})$ so that $\mb{u}_{n}$ is a good approximation of $\mb{u}(t_{n})$. In particular, note that at time $t_{0}$ we must have $\mc{D} \circ \mc{E}(\mb{u}_{0}) = \mb{u}_{0}$; in other words, $\mc{D} \circ \mc{E} = \operatorname{Id}_{\RR^{n}}$.
+\tableofcontents
 
-A scheme is **consistent** if the local truncation error goes to zero with the step size, where the local truncation error is defined as $\mb{u}_{n+1} - \mb{u}(t_{n+1})$ assuming that $\mb{u}_{n} = \mb{u}(t_{n})$. A scheme has **order** $p$ if $\mb{u}_{n+1} - \mb{u}(t_{n+1}) = \mc{O}(h_{n}^{p+1})$.
+## General framework
 
-The **region of absolute stability** is the set of all complex $z = \lambda h$ such that when evolving the linear ODE $\mb{r}(t, \mb{u}, \dot{\mb{u}}) = \dot{\mb{u}} - \lambda \mb{u}$, the numerical solution tends to $\mb{0}$ when time goes to infinity. A scheme is **A-stable** if its region of absolute stability contains the entire left complex plane. A scheme is **L-stable** if it is A-stable and if the rate at which $\mb{u}_{n}$ goes to $\mb{0}$ increases as $\Re(\lambda) \to -\infty$. In the case of a linear scheme, one can identify an amplification matrix $\mc{A}(z): \mc{S} \to \mc{S}$. The stability of the scheme directly depends on the eigenvalues of $\mc{A}(z)$.
+Let $\mb{f} \in C(\RR \times \RR^{d}, \RR^{d})$ be continuous in the first variable and Lipschitz continuous in the second variable. For all $\mb{p} \in \RR^{d}$, the Picard--Lindelöf theorem ensures the existence of an open interval $I \subset \RR$ containing $0$ and a unique $\mb{u}: I \to \RR^{d}$ such that
+$$\forall t \in I, \quad \dot{\mb{u}}(t) = \mb{f}(t, \mb{u}(t)), \qquad \mb{u}(0) = \mb{p}.$$
+Besides, $\mb{u}$ depends continuously on $\mb{u}$; in other words, this initial value problem is well-posed.
 
-# $\theta$-method
-The $\theta$ method consists in enforcing a zero residual at $t_{n + \theta} = (1 - \theta) t_{n} + \theta t_{n+1}$. More precisely, find $\mb{v} \in \RR^{n}$ such that
-$$\mb{r}(t_{n+\theta}, \mb{u}_{n} + \theta h_{n} \mb{v}, \mb{v}) = \mb{0}$$
-and set $\mb{u}_{n+1} = \mb{u}_{n} + h_{n} \mb{v}$. Assume that $\mb{r}(t, \mb{u}, \dot{\mb{u}}) = \dot{\mb{u}} - f(t, \mb{u})$. The third-order Taylor expansion of the exact solution is
+We are willing to approximate the flow of $\mb{f}$ in the interval $[0, T]$ for some $T \in I \cap \RR_{+}$. For simplicity, we construct an approximate flow using constant time steps. Let $n \geq 1$, define $h = T / n$ and $t_{k} = k h$ for $k \in \{0, \ldots, n\}$. We consider a general marching procedure described by the following framework:
+* A **starting map** $\ms{S}_{h}: \RR^{d} \to \md{S}$ embeds the initial condition into a state space $\md{S}$,
+* A **marching map** $\ms{M}_{h}: \md{S} \to \md{S}$ evolves the state for one time step,
+* A **finishing map** $\ms{F}_{h}: \md{S} \to \RR^{d}$ converts the state space into the solution space.
+We define the recurrences $(\mb{s}_{k})_{0 \leq k \leq n}$ and $(\mb{u}_{k})_{0 \leq k \leq n}$ by
+$$\mb{s}_{0} = \ms{S}_{h}(\mb{p}), \qquad \mb{s}_{k+1} = \ms{M}_{h}(\mb{s}_{k}), \qquad \mb{u}_{k} = \ms{F}_{h}(\mb{s}_{k}).$$
+In other words, $\mb{s}_{k} = \ms{M}_{h}^{k} \circ \ms{S}_{h}(\mb{u}_{0})$ and $\mb{u}_{k} = \ms{F}_{h} \circ \ms{M}_{h}^{k} \circ \ms{S}_{h}(\mb{u}_{0})$. We want to design the scheme $(\ms{S}_{h}, \ms{M}_{h}, \ms{F}_{h})$ so that $\mb{u}_{k}$ approximates $\mb{u}(t_{k})$.
+
+Let $\ms{E}_{h}: \RR^{d} \to \RR^{d}$ denote the exact flow of $\mb{f}$ for a time step $h$, that is $\ms{E}(\mb{u}(t)) = \mb{u}(t + h)$. A first idea is to compare the approximate and continuous solutions at time $T$. The corresponding error is called the **global truncation error** and is defined as
+$$\ms{GTE}(h) \doteq \norm{\ms{F}_{h} \circ \ms{M}_{h}^{n} \circ \ms{S}_{h}(\mb{p}) - \ms{E}_{h}^{n}(\mb{p})}.$$
+We are only in the dependence of $\ms{GTE}$ on $h$ and the derivatives of $\mb{f}$; not on $\mb{p}$. It is easier to look at the error after a single step. This is called the **local truncation error**,
+$$\ms{LTE}(h) \doteq \norm{\ms{F}_{h} \circ \ms{M}_{h} \circ \ms{S}_{h}(\mb{p}) - \ms{E}_{h}(\mb{p})}.$$
+
+We can now state the consistency and convergence of a scheme.
+
+\definition{Consistency}{
+A scheme is **consistent with order** $p$ if $\ms{LTE}(h) = O(h^{p})$. When $p = 0$, this property is called **pre-consistency**. When $p = 1$, this property is called **consistency**.
+}
+
+\definition{Convergence}{
+A scheme is **convergent with order** $p$ if $\ms{GTE}(h) = O(h^{p+1})$.
+}
+
+We now move to the linear stability of a scheme. It is defined in terms of the behaviour of the scheme when applied to the test problem $\mb{f}(t, \mb{u}) = \lambda \mb{u}$ for $\lambda \in \CC$. The exact solution is $\mb{u}(t) = \exp(\lambda t) \mb{p}$; in particular $\mb{u}$ vanishes at infinity when $\Re \lambda < 0$. We are interested in schemes that mimic this property numerically.
+
+\definition{Linear stability}{
+The **stability function** of a scheme is the transfer function $\mb{M}: \CC \to \RR^{d \times d}$ involved in $\mb{u}_{k+1} = \mb{M}(\lambda h) \mb{u}_{k}$ when applied to $\mb{f}(t, \mb{u}) = \lambda \mb{u}$.
+* Zero-stability / $D$-stability: $\mb{M}(0)$ is bounded, that is, $\norm{\mb{M}(0)^{k}}$ is bounded.
+* Strict zero-stability: $\mb{M}(0)$ is is convergent, that is, $\norm{\mb{M}(0)^{k}} \to 0$.
+
+The scheme is said to be absolute stable at $z = \lambda h \in \CC$: $\rho(\mb{M}(z)) < 1$. The **region of absolute stability** of the scheme is defined as
+$$\mc{R} \doteq \{z \in \CC, \rho(\mb{M}(z)) < 1\}.$$
+The **interval of stability** is $\mc{R} \cap \RR$. Related stability notions are as follows:
+* $A$-stability: $\{z \in \CC, \Re z < 0\} \subset \mc{R}$.
+* $A(\alpha)$-stability: $\{z \in \CC, \Re z \leq 0, \abs{\frac{\Im z}{\Re z}} \leq \tan \alpha\} \subset \mc{R}$.
+* $A(0)$-stability: $A(\alpha)$-stability for some $\alpha > 0$.
+* $A_{0}$-stability: $A(\alpha)$-stability for $\alpha = 0$.
+* Stiff stability: $\{z \in \CC, \Re z < -C\} \cup \{z \in \CC, -C \leq \Re z < 0, \abs{\Im z} \leq D \} \subset \mc{R}$ for some $C, D > 0$.
+* $I$-stability: $\{z \in \CC, \Re z = 0\} \subset \mc{R}$.
+* $L$-stability / Super stability / Strong $A$ stability: $A$-stability and $\rho(\mb{M}(z)) \to 0$ when $z \to \infty$.
+* $AN$-stability: equivalent of $A$-stability when $\mb{\lambda} \in \CC^{d}$.
+}
+
+We now move to some nonlinear stability properties. We are interested in dissipative problems where
+$$\Re \inner{\mb{f}(t, \mb{u}) - \mb{f}(t, \mb{v})}{\mb{u} - \mb{v}} \leq 0.$$
+In that case, if $\mb{u}_{0}, \mb{v}_{0} \in \RR^{d}$ are two initial conditions, then the corresponding solutions $\mb{u}, \mb{v}$ satisfy
+$$\partial_{t} (\norm{\mb{u}(t) - \mb{v}(t)}^{2}) \leq 0,$$
+so $\mb{u}$ and $\mb{v}$ merge at infinity. It is desirable to reproduce this behaviour numerically.
+
+\definition{$B$-stability and $BN$-stability, $G$-stability}{
+A scheme is **B-stable** if $\norm{\mb{u}_{n+1} - \mb{v}_{n+1}} \leq \norm{\mb{u}_{n} - \mb{v}_{n}}$ when applied to a monotonic autonomous problem and two arbitrary initial conditions. A scheme is **BN-stable** if the same condition holds for a non-autonomus problem. **G-stability** refers to the same property but in a norm induced by an SPD matrix.
+}
+
+\definition{RK-stability}{
+A scheme is **RK-stable** if $\mb{M}(z)$ has a single non-zero eigenvalue. This eigenvalue is then interpreted as the stability function of a Runge-Kutta method.
+}
+
+\definition{Symplecticity}{
+A scheme is **symplectic** if its stability function is a symplectic map when applied to a Hamiltonian system.
+}
+
+Similar stability and order notions can be defined in the state space or in some internal process of the marching procedure.
+
+In the following, we briefly introduce the $\theta$-method, Runge-Kutta schemes and linear multi-step. We then provide a detailed analysis of general linear methods, which are a generalisation of theses schemes.
+
+## $\theta$-method
+The $\theta$-method is a simple family of schemes that includes the explicit and implicit Euler schemes, as well as the trapezoidal rule as special cases. We simply consider $\md{S} = \RR^{d}$, $\ms{S} = \ms{F} = \Id_{\RR^{d}}$ and $\ms{M}(\mb{s}_{k}) = \mb{s}_{k+1}$ is defined implicitly through
+$$\mb{s}_{k+1} = \mb{s}_{k} + h \mb{f}((1 - \theta) t_{k} + \theta t_{k+1}, (1 - \theta) \mb{s}_{k} + \theta \mb{s}_{k+1}),$$
+where $\theta \in \RR$ characterises the scheme. The choice $\theta = 0$ is the only explicit member of the family and is known as explicit Euler. The choice $\theta = 1$ corresponds to implicit Euler, and $\theta = 1/2$ is the trapezoidal rule.
+
+The third-order Taylor expansion of the exact and approximate solutions are
 $$\begin{align*}
-\mb{u}(t_{n+1}) &= \mb{u}(t_{n}) + h_{n} \dot{\mb{u}}(t_{n}) + \frac{1}{2} h_{n}^{2} \ddot{\mb{u}}(t_{n}) + \mc{O}(h_{n}^{3}) \\
-&= \mb{u}(t_{n}) + h_{n} f(t_{n}, \mb{u}_{n}) + \frac{1}{2} h_{n}^{2} (\partial_{t} f(t_{n}, \mb{u}_{n}) + \partial_{\mb{u}} f(t_{n}, \mb{u}_{n}) f(t_{n}, \mb{u}_{n})) + \mc{O}(h_{n}^{3}).
+\mb{u}(t_{k+1}) &= \mb{u}(t_{k}) + h \mb{f}(t_{k}, \mb{u}(t_{k})) + \frac{1}{2} h^{2} [\partial_{1} \mb{f}(t_{k}, \mb{u}(t_{k})) + \partial_{2} \mb{f}(t_{k}, \mb{u}(t_{k})) \mb{f}(t_{k}, \mb{u}(t_{k}))] + O(h^{3}), \\
+\mb{u}_{k+1} &= \mb{u}_{k} + h \mb{f}(t_{k}, \mb{u}_{k}) + \theta h^{2} [\partial_{1} \mb{f}(t_{k}, \mb{u}_{k}) + \partial_{2} \mb{f}(t_{k}, \mb{u}_{k}) \mb{f}(t_{k}, \mb{u}_{k})] + O(h^{3}).
 \end{align*}$$
-The third-order Taylor expansion of the numerical solution is
-$$\begin{align*}
-\mb{u}_{n+1} &= \mb{u}_{n} + h_{n} f(t_{n} + \theta h_{n}, \mb{u}_{n} + \theta h_{n} \mb{v}) \\
-&= \mb{u}_{n} + h_{n} f(t_{n}, \mb{u}_{n}) + \theta h_{n}^{2} \partial_{\mb{u}} f(t_{n}, \mb{u}_{n}) \mb{v} + \theta h_{n}^{2} \partial_{t} f(t_{n}, \mb{u}_{n}) + \mc{O}(h_{n}^{3}) \\
-&= \mb{u}_{n} + h_{n} f(t_{n}, \mb{u}_{n}) + \theta h_{n}^{2} \partial_{\mb{u}} f(t_{n}, \mb{u}_{n}) f(t_{n}, \mb{u}_{n}) + \theta h_{n}^{2} \partial_{t} f(t_{n}, \mb{u}_{n}) + \mc{O}(h_{n}^{3}).
-\end{align*}$$
-Observe that regardless of $\theta$, the expansions $\mb{u}(t_{n+1})$ and $\mb{u}_{n+1}$ coincide up to $\mc{O}(h_{n})$, so the $\theta$-method is at least of order $1$. They coincide up to $\mc{O}(h_{n})$ if and only if $\theta = 1/2$.
+Observe that regardless of $\theta$, the expansions $\mb{u}(t_{k+1})$ and $\mb{u}_{k+1}$ coincide up to $O(h)$, so the $\theta$-method is at least of order $1$. They coincide up to $O(h^{2})$ if and only if $\theta = 1/2$.
 
-In the case of a linear first-order ODE, one readily finds $\mb{v} = \lambda (1 - \theta z)^{-1} \mb{u}_{n}$, and
-$$\mc{A}(z) = 1 + \frac{z}{1 - \theta z}.$$
+In the case of a linear first-order ODE, the definition of $\mb{u}_{k+1}$ is
+$$\mb{u}_{k+1} = \mb{u}_{k} + (1 - \theta) z \mb{u}_{k} + \theta z \mb{u}_{k+1},$$
+so we infer
+$$\mb{M}(z) = \frac{1 + (1 - \theta) z}{1 - \theta z}.$$
 Observe that
-$$\abs{\mc{A}(z)} \leq 1 \iff (1 - 2 \theta) \abs{z}^{2} + 2 \Re(z) \leq 0.$$
+$$\abs{\mb{M}(z)} \leq 1 \iff (1 - 2 \theta) \abs{z}^{2} + 2 \Re(z) \leq 0.$$
 We distinguish three classes:
-* If $\theta < 1/2$, the stability region is the circle of radius $1 / (1 - 2 \theta)$ centred at $(-1/(1 - 2 \theta), 0)$. This scheme is not $A$-stable. The case $\theta = 0$ is known as Forward Euler and it is the only explicit scheme of the family.
-* If $\theta = 1/2$, the stability region is the whole left complex plane. The scheme is $A$-stable. It is known as the implicit midpoint scheme.
-* If $\theta > 1/2$, the stability region includes the whole complex plane except the circle of radius $1 / (2 \theta - 1)$ and centred at $(1 /(2 \theta - 1), 0)$. In particular, this scheme is $A$-stable. The special case $\theta = 1$ is known as Backward Euler.
+* If $\theta < 1/2$, the stability region is the circle of radius $1 / (1 - 2 \theta)$ centred at $(-1/(1 - 2 \theta), 0)$. This scheme is not $A$-stable.
+* If $\theta = 1/2$, the stability region is the whole left complex plane. The scheme is $A$-stable.
+* If $\theta > 1/2$, the stability region includes the whole complex plane except the circle of radius $1 / (2 \theta - 1)$ and centred at $(1 /(2 \theta - 1), 0)$. In particular, this scheme is $A$-stable.
 The scheme is only $L$-stable when $\theta = 1$.
 
-# Runge-Kutta
+## Runge-Kutta
 
-The Runge-Kutta method is a multi-stage method consisting in enforcing a zero residual at intermediate times between $t_{n}$ and $t_{n+1}$, and forming $\mb{u}_{n+1}$ from linear combinations of these intermediate solutions. More precisely, given $s \geq 1$, $\mb{c} \in \RR^{s}$, $\mb{A} \in \RR^{s \times s}$ and $\mb{b} \in \RR^{s}$, find $(\mb{v}_{1}, \ldots, \mb{v}_{s})$ such that
-$$\mb{r}(t_{n} + \mb{c}_{i} h_{n}, \mb{u}_{n} + h_{n} \sum_{j = 1}^{s} \mb{A}_{ij} \mb{v}_{j}, \mb{v}_{i}) = \mb{0}$$
-for all $i \in \{1, \ldots, s\}$ and finally set
-$$\mb{u}_{n+1} = \mb{u}_{n} + h_{n} \sum_{i = 1}^{s} \mb{b}_{i} \mb{v}_{i}.$$
-A Runge-Kutta is thus entirely determined from the coefficients $\mb{A}$, $\mb{b}$ and $\mb{c}$. They are conveniently arranged in the Butcher tableau format
+The Runge-Kutta method is a multi-stage method consisting in enforcing a zero residual at intermediate times between $t_{k}$ and $t_{k+1}$, and forming $u_{k+1}$ from linear combinations of these intermediate solutions. Here again, $\md{S} = \RR^{d}$ and $\ms{S} = \ms{F} = \Id_{\RR^{d}}$. A RK scheme depends on $s \geq 1$, a matrix $\mb{A} \in \RR^{s \times s}$ and vectors $\mb{b}, \mb{c} \in \RR^{s}$. They are conveniently arranged in a Butcher tableau
 $$\begin{array}{c|c}
 \mb{c} & \mb{A} \\
 \hline
-& \mb{b}^{\ast}
-\end{array}.$$
-
-Applied to a linear ODE with constant step size $h$, letting $\mb{v} = (\mb{v}_{1}, \ldots, \mb{v}_{s}) \in \RR^{s}$, this recursion becomes
-$$\mb{v} = \lambda (\mb{1}_{s} \mb{u}_{n} + h \mb{A} \mb{v}), \qquad \mb{u}_{n+1} = \mb{u}_{n} + h \mb{b}^{\ast} \mb{v}.$$
-We infer $\mb{v} = \lambda (\mb{I} - z \mb{A})^{-1} \mb{1}_{s} \mb{u}_{n}$ and $\mb{u}_{n+1} = (1 + z \mb{b}^{\ast} (\mb{I} - z \mb{A})^{-1} \mb{1}) \mb{u}_{n}$, that is
-$$\mc{A}(z) = 1 + z \mb{b}^{\ast} (\mb{I} - z \mb{A})^{-1} \mb{1}.$$
-The order conditions for order $p$ are found by enforcing $\mb{c} = \mb{A} \mb{1}$ and looking at the rooted trees of size $\leq p$. In the following expressions, summation is understood for all appearing variables, in the range $\{1, \ldots, s\}$.
-* **Order 1** $b_{i} = 1$.
-* **Order 2** $b_{i} c_{i} = 1/2$.
-* **Order 3** $b_{i} c_{i}^{2} = 1/3$, and $b_{i} A_{ij} c_{j} = 1/6$.
-* **Order 4** $b_{i} A_{ij} A_{jk} c_{k} = 1/24$, $b_{i} A_{ij} c_{j}^{2} = 1/12$, $b_{i} c_{i} A_{ij} c_{j} = 1/8$ and $b_{i} c_{i}^{3} = 1/4$.
-In the following, we look at one- and two-stage schemes and satisfy the order conditions one by one until possible.
-
-## 1 stage
-A generic one-stage, first-order RK scheme looks like
-$$\begin{array}{c|c}
-\alpha & \alpha \\ \hline
-& 1
-\end{array},$$
-for some $\alpha \in \RR$ (usually $\alpha \in [0, 1]$). This is precisely the $\theta$-scheme presented above.
-
-This scheme has order $2$ when $\alpha = 1/2$; it is the implicit midpoint rule corresponding to $\theta = 1/2$ in the $\theta$-scheme. Neither of the conditions for order $3$ are satisfied.
-
-## 2 stages
-A generic two-stage, first-order RK scheme looks like
-$$\begin{array}{c|cc}
-\alpha & \bar{\alpha} & \alpha - \bar{\alpha} \\
-\beta & \beta - \bar{\beta} & \bar{\beta} \\ \hline
-& \gamma & 1 - \gamma
-\end{array},$$
-where $\alpha, \bar{\alpha}, \beta, \bar{\beta}, \gamma \in \RR$. There is a lot of freedom in these choices so one generally only considers two-stage RK schemes of order $2$.
-
-The second-order conditions are satisfied when $\gamma \alpha + (1 - \gamma) \beta = 1/2$, that is for the two classes
-$$\begin{array}{c|cc}
-1/2 & \bar{\alpha} & 1/2 - \bar{\alpha} \\
-1/2 & 1/2 - \bar{\beta} & \bar{\beta} \\ \hline
-& \gamma & 1 - \gamma
-\end{array}, \qquad \text{or} \qquad
-\begin{array}{c|cc}
-\alpha & \bar{\alpha} & \alpha - \bar{\alpha} \\
-\beta & \beta - \bar{\beta} & \bar{\beta} \\ \hline
-& \frac{\beta - 1/2}{\beta - \alpha} & \frac{1/2 - \alpha}{\beta - \alpha}
-\end{array},$$
-for some $\beta \neq \alpha$. We now look at these two classes separately.
-
-### First class
-Note that this scheme reduces to a one-stage method when $\bar{\alpha} + \bar{\beta} = 1/2$.
-$$\begin{array}{c|cc}
-1/2 & \bar{\alpha} & 1/2 - \bar{\alpha} \\
-1/2 & 1/2 - \bar{\beta} & \bar{\beta} \\ \hline
-& \gamma & 1 - \gamma
+& \mb{b}^{\ast}.
 \end{array}$$
-The stability function is
-$$\mc{A}(z) = \frac{1 + z/2 - v z^{2}}{1 - z/2 + v z^{2}}, \qquad v = \alpha \beta - \bar{\alpha} \beta - \alpha \bar{\beta}.$$
-If $v = 0$, the scheme is A-stable. Otherwise, the stability region is the hyperbola $(x - w)^{2} - y^{2} \geq w^{2}$, where $w = 1 / (4 v)$. The scheme is never L-stable.
+The marching procedure is defined as
+$$\ms{M}(\mb{s}_{k}) = \mb{s}_{k} + h \sum_{i = 1}^{s} \mb{b}_{i} \mb{f}(\mb{w}_{i}),$$
+where $\mb{w}_{1}, \ldots, \mb{w}_{s} \in \RR^{d}$ are such that
+$$\mb{w}_{i} = \mb{s}_{k} + h \sum_{j = 1}^{s} \mb{A}_{ij} \mb{f}(t_{k} + \mb{c}_{i} h, \mb{w}_{j}).$$
 
-Neither of the conditions for order $3$ can be met.
+### Linear stability
+Applied to a linear ODE with constant step size $h$, letting $\mb{w} = (\mb{w}_{1}, \ldots, \mb{w}_{s}) \in \RR^{s}$, this recursion becomes
+$$\mb{w} = \lambda (\mb{1}_{s} \mb{s}_{k} + h \mb{A} \mb{w}), \qquad \mb{u}_{k+1} = \mb{u}_{k} + h \mb{b}^{\ast} \mb{w}.$$
+We infer $\mb{w} = \lambda (\mb{I} - z \mb{A})^{-1} \mb{1}_{s} \mb{u}_{k}$ and $\mb{u}_{k+1} = (1 + z \mb{b}^{\ast} (\mb{I} - z \mb{A})^{-1} \mb{1}) \mb{u}_{k}$, that is
+$$\mb{M}(z) = 1 + z \mb{b}^{\ast} (\mb{I} - z \mb{A})^{-1} \mb{1}.$$
 
-### Second class
-A family of explicit two-stage, second-order RK schemes is as follows
-$$\begin{array}{c|cc}
-0 & 0 & 0 \\
-\alpha & \alpha & 0 \\ \hline
-& 1 - \frac{1}{2 \alpha} & \frac{1}{2 \alpha}
-\end{array}.$$
-The stability function is $\mc{A}(z) = 1 + z / 2$. Choosing $\alpha = 1$ yields Heun's method (also known as improved Euler or explicit trapezoidal rule). The choice $\alpha = 2/3$ is known as Ralston's method and minimises the local truncation error. Choosing $\alpha = 1/2$ provides the explicit midpoint rule, which is a predictor-corrector scheme.
+### Zero-stability, pre-consistency and consistency
+All RK schemes are zero-stable and pre-consistent. The consistency condition is $\mb{b}^{\ast} \mb{1} = 1$. One usually assumes stage consistency, that is $\mb{A} \mb{1} = \mb{c}$.
 
-Among the diagonally-implicit methods
-$$\begin{array}{c|cc}
-\alpha & \alpha & 0 \\
-\beta & \beta - \bar{\beta} & \bar{\beta} \\ \hline
-& \frac{\beta - 1/2}{\beta - \alpha} & \frac{1/2 - \alpha}{\beta - \alpha}
-\end{array},$$
-Crank-Nicolson is the most popular and corresponds to $\alpha = \bar{\alpha} = 1/2$, $\beta = \bar{\beta} = 1/2$. More generally, the stability function is
-$$\mc{A}(z) = \frac{1 + (1/2 - \alpha - \bar{\beta}) z}{1 - (\alpha + \beta) z + \alpha \beta z^{2}}.$$
-The stability region is difficult to analyse, but this scheme may only be L-stable when $\alpha \beta \neq 0$ or when $\alpha \beta = 0$, $\alpha + \beta \neq 0$ and $\bar{\beta} = 1/2 - \alpha$. The singly-diagonally-implicit constraint helps simplify the analysis
-$$\begin{array}{c|cc}
-\alpha & \alpha & 0 \\
-\beta & \beta - \alpha & \alpha \\ \hline
-& \frac{\beta - 1/2}{\beta - \alpha} & \frac{1/2 - \alpha}{\beta - \alpha}
-\end{array}.$$
-The two most famous choices for $\beta$ are $\beta = 1 - \alpha$ (Pareschi Russo) and $\beta = 1$. Qin and Zhang's method is a Pareschi Russo method with $\alpha = 1/4$. In both cases, the method is A-stable if $\alpha \geq 1/4$ and L-stable if $\alpha = 1 \pm \sqrt{2} / 2$.
+### Order conditions
+Higher order conditions can be studied using B-series: introduce $\mb{\xi} \in \ms{B}^{s}$ for each stage ($\mb{\xi} \sim \mb{u}(t + \mb{c} h)$). The order conditions read
+$$\mb{\xi} = \mb{1} + \mb{A} \mb{\xi} \ms{D} = \ms{E}_{\mb{c}} + \ms{O}_{q+1}, \qquad \ms{E} = 1 + \mb{b}^{\ast} \mb{\xi} \ms{D} + \ms{O}_{p+1},$$
+where $q$ is the stage-order and $p$ is the order.
 
-The third-order conditions impose
-$$\begin{array}{c|cc}
-\frac{1}{2} - \frac{\sqrt{3}}{6} x & \frac{1}{2} - y x & (y - \frac{\sqrt{3}}{6}) x \\
-\frac{1}{2} + \frac{\sqrt{3}}{6} x^{-1} & (y + \frac{\sqrt{3}}{6}) x^{-1} & \frac{1}{2} - y x^{-1} \\ \hline
-& \frac{1}{1 + x^{2}} & \frac{x^{2}}{1 + x^{2}}
-\end{array}$$
-for some $x \neq 0$ and $y \in \RR$. Choosing $y = \sqrt{3} / 6$ yields a diagonally-implicit scheme, and even a singly-diagonally-implicit one with $x = \pm 1$. The choice ($x = -1$, $y = \sqrt{3} / 6$) is known as the Crouzeix method.
+## Linear multi-step
 
-Choosing $x = 1$ and $y = 1/4$ produces a Gauss-Legendre scheme.
+Linear multi-step methods store previous iterates and predict the next. As notable examples, this class of methods includes Adams-Moulton, Adams-Bashford and Backward Differentiation Formula (BDF) methods. 
+
+In this setting, $\md{S} = (\RR^{d})^{r}$ for some $r \geq 1$, $\ms{S}$ can be a Runge-Kutta method and represents $\mb{u}(k h)$ for $k \in \{0, \ldots, r - 1\}$. In that case $\ms{F}$ simply extracts the first component of the state, that is $\ms{F}(\mb{s}_{1}, \ldots, \mb{s}_{r}) = \mb{s}_{1}$. The marching procedure is defined as
+$$\ms{M}(\mb{s}_{1}, \ldots, \mb{s}_{r}) = (\mb{s}_{0}, \mb{s}_{1}, \ldots, \mb{s}_{r-1}),$$
+where $\mb{s}_{0} \in \RR^{d}$ solves
+$$\mb{s}_{0} = \sum_{i = 1}^{r} \mb{\alpha}_{i} \mb{s}_{i} + h \sum_{i = 0}^{r} \mb{\beta}_{i} \mb{f}(t_{k} - (i - 1) h, \mb{s}_{i}).$$
+Here $\mb{\alpha} \in \RR^{r}$ and $\mb{\beta} \in \RR^{r+1}$ are the parameters of the method.
+
+### Linear stability
+The stability matrix is the companion matrix of the polynomial $\pi(w, z) = \rho(w) - z \sigma(w)$, so the stability condition at a given $z \in \CC$ is that the roots of $\pi(w, z)$ are in the unit circle.
+
+### Zero-stability, pre-consistency and consistency
+It is common to introduce the polynomials
+$$\rho(z) = z^{r} - \sum_{i = 1}^{r} \mb{\alpha}_{i} z^{r - i}, \qquad \sigma(z) = \sum_{i = 0}^{r} \mb{\beta}_{i} z^{r - i}.$$
+The zero-stability requires the roots of $\rho$ to lie in the unit circle. The pre-consistency condition is then $\sum_{i = 1}^{r} \mb{\alpha}_{i} = 1$, that is $\rho(1) = 0$. The consistency condition is $\sum_{i = 0}^{r} \mb{\beta}_{i} = r - \sum_{i = 1}^{r} \mb{\alpha}_{i} (r - i) $, that is $\rho'(1) - \sigma(1) = 0$.
+
+### Order conditions
+The order conditions are $\pi(\exp(z), z) = \rho(\exp(z)) - z \sigma(\exp(z)) = O(z^{p+1})$. Alternatively, using the formalism of B-series, the order conditions are written
+$$\ms{E}^{r} = \sum_{i = 1}^{r} \mb{\alpha}_{i} \ms{E}^{r - i} + \sum_{i = 0}^{r} \mb{\beta}_{i} \ms{E}^{r - i} \ms{D} + \ms{O}_{p+1}.$$
+
+## General linear methods
+
+Runge-Kutta and linear multi-step methods can be examined under the broad class of general linear methods (GLM). In this class of methods, we allow for $r \geq 1$ reused steps and $s \geq 1$ internal stages. Runge-Kutta methods are recovered for $r = 1$, while linear multi-step methods correspond to $s = 1$. GLM were introduced to offer more flexibility than RK and LM methods, provide a better understanding of order conditions, and break order barriers.
+
+The state space is thus $\md{S} = (\RR^{d})^{r}$. The starting and finishing procedures depend on the particular scheme; we describe them below. The marching procedure has the form
+$$\ms{M}_{h}(\mb{s})_{i} = \mb{V}_{ij} \mb{s}_{j} + h \mb{B}_{ij} \mb{f}(\mb{w}_{j}),$$
+where $\mb{w}_{1}, \ldots, \mb{w}_{s} \in \RR^{d}$ are defined implicitly via
+$$\mb{w}_{i} = \mb{U}_{ij} \mb{s}_{j} + h \mb{A}_{ij} \mb{f}(\mb{W}_{j}).$$
+
+These schemes are characterised by the matrices $\mb{A} \in \RR^{s \times s}$, $\mb{B} \in \RR^{r \times s}$, $\mb{U} \in \RR^{s \times r}$ and $\mb{V} \in \RR^{r \times r}$, as well as assumptions on the interpretation of the state variables, the shape of the stage variables and the finishing procedure. One usually assume that the starting procedure is such that the state at time $t$ represents approximations of $\mb{u}(t)$ involving higher-order derivatives, that is
+$$\mb{s}_{i}(t) = \sum_{k = 0}^{p} \mb{\alpha}_{0, k} \mb{u}(t) + O(h^{p+1}).$$
+where $\mb{\alpha}_{0}, \ldots, \mb{\alpha}_{p} \in \RR^{r}$. We do not focus on the design of the starting procedure for now. The internal stages are assumed to represent
+$$\mb{w}_{i}(t) = \mb{u}(t + \mb{c}_{i} h) + O(h^{2})$$
+for some $\mb{c} \in \RR^{s}$. Finally, we assume that the finishing procedure is just a linear combination of the state vectors, that is
+$$\ms{F}(\mb{s}_{1}, \ldots, \mb{s}_{r}) = \sum_{i = 1}^{r} \mb{\beta}_{i} \mb{s}_{i},$$
+for some $\mb{\beta} \in \RR^{r}$.
+
+### Linear stability
+Applied to the linear ODE $\mb{f}(t, \mb{u}) = \lambda \mb{u}$, the recursions defining $\mb{w}$ and $\mb{s}_{k}$ read
+$$\mb{w} = \mb{U} \mb{s}_{k} + z \mb{A} \mb{w}, \qquad \mb{s}_{k+1} = \mb{V} \mb{s}_{k} + z \mb{B} \mb{w}.$$
+We readily infer $\mb{s}_{k+1} = (\mb{V} + z \mb{B} (\mb{I} - z \mb{A})^{-1} \mb{U}) \mb{s}_{k}$, and thus
+$$\mb{u}_{k} = \ms{F}_{h} \circ (\mb{V} + z \mb{B} (\mb{I} - z \mb{A})^{-1} \mb{U})^{k} \circ \ms{S}_{h}(\mb{p}).$$
+Strictly speaking, the linear stability analysis requires the knowledge of $\ms{S}_{h}$ and $\ms{F}_{h}$, but one usually directly relates it to the stability in the state space, and introduces
+$$\mb{M}(z) = \mb{V} + z \mb{B} (\mb{I} - z \mb{A})^{-1} \mb{U}.$$
+
+### Zero-stability, pre-consistency and consistency
+Applying a GLM to $\mb{f} = \mb{0}$, we obtain
+$$\mb{u}_{k} = \ms{F}_{h} \circ \mb{V}^{k} \circ \ms{S}_{h}(\mb{p}).$$
+In particular for $k = 0$, one must have $\ms{F}_{h} \circ \ms{S}_{h} = \Id_{\RR^{d}}$, so $\ms{S}_{h}$ must be left-invertible and $\ms{F}_{h}$ has to be a left-inverse of $\ms{S}_{h}$. Besides, $\mb{V}$ must be power-bounded for $\mb{u}_{k}$ to remain bounded.
+
+The pre-consistency and consistency conditions are $\mb{\beta}^{\ast} \mb{V} \mb{\alpha}_{0} = 1$ and $\mb{\beta}^{\ast} (\mb{B} \mb{1} + \mb{V} \mb{\alpha}_{1}) = 1$. In fact, these are projections on the output space of the pre-consistency and consistency conditions in the state space, $\mb{V} \mb{\alpha}_{0} = \mb{\alpha}_{0}$ and $\mb{\alpha}_{0} + \mb{\alpha}_{1} = \mb{B} \mb{1} + \mb{V} \mb{\alpha}_{1}$, respectively. It is often of interest to look for the pre-consistency and consistency at the stage level. These conditions are $\mb{U} \mb{\alpha}_{0} = \mb{1}$ and $\mb{c} = \mb{A} \mb{1} + \mb{U} \mb{\alpha}_{1}$, respectively.
+
+### Order conditions
+The analysis of GLM is simplified through the formalism of B-series. We introduce $\mb{\xi} \in \ms{B}^{s}$ to represent the stage vectors (corresponding to $\mb{u}(t + \mb{c} h)$) and $\mb{\eta} \in \ms{B}^{r}$ for the state vectors (corresponding to $\mb{\alpha}_{k} \mb{u}^{(k)}(t)$). They are related by
+$$\mb{\xi} = \mb{U} \mb{\eta} + \mb{A} \mb{\xi} \ms{D} = \ms{E}_{\mb{c}} + \ms{O}_{q+1}, \qquad \ms{E} \mb{\eta} = \mb{V} \mb{\eta} + \mb{B} \mb{\xi} \ms{D} + \ms{O}_{p+1}, \qquad \ms{E} = \mb{\beta}^{\ast} \ms{E} \mb{\eta} + \ms{O}_{o+1}.$$
+Here $q$ is the stage order, $p$ is the state order and $o$ is the order of the method.
 
 \backtonotes

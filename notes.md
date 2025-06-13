@@ -22,4 +22,6 @@ This page gathers a few methods, results or examples that I find interesting or 
 
 * [Cesaro's lemma](/notes/cesaro)
 * [Method of small steps](/notes/small_steps)
-* [ODE integrators](/notes/ode_integrators)
+* [Ordinary Differential Equations](/notes/ode_integrators)
+* [Notions of continuity](/notes/continuity)
+* [Envelope of a family of curves](/notes/envelope)

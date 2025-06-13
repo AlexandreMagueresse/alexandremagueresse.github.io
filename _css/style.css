@@ -27,6 +27,13 @@
     --comment-background-color: hsl(200, 30%, 95%);
     --comment-border-color: hsl(200, 30%, 90%);
 
+    --definition-background-color: hsl(200, 60%, 95%);
+    --definition-border-color: hsl(200, 60%, 90%);
+    --proposition-background-color: hsl(150, 60%, 95%);
+    --proposition-border-color: hsl(150, 60%, 90%);
+    --proof-background-color: hsl(50, 60%, 95%);
+    --example-background-color: hsl(340, 30%, 95%);
+
     --separator-color: hsl(0, 0%, 80%);
 }
 
@@ -310,12 +317,30 @@ body { counter-reset: eqnum; }
 }
 
 /* === Custom divs === */
+.definition {
+    background-color: var(--definition-background-color);
+    border-left: 7px solid var(--definition-border-color);
+    padding: 0.2em 1em;
+    margin: 1em 0em;
+}
+
 .proposition {
-    font-style: italic;
-    background: var(--comment-background-color);
-    margin: 1.5em 0.5em;
-    padding: 0.5em 0.5em;
-    border-left: 7px solid var(--comment-border-color);
+    background-color: var(--proposition-background-color);
+    border-left: 7px solid var(--proposition-border-color);
+    padding: 0.2em 1em;
+    margin: 1em 0em;
+}
+
+.proof {
+    background-color: var(--proof-background-color);
+    padding: 0.2em 1em;
+    margin: 1em 0em;
+}
+
+.example {
+    background-color: var(--example-background-color);
+    padding: 0.2em 1em;
+    margin: 1em 0em;
 }
 
 .backtonote {

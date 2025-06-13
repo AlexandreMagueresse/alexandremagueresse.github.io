@@ -15,7 +15,7 @@ tags = ["research"]
 
 # Method of small steps
 
-@@proposition
+\proposition{
 Let $z \in \RR$ and $h > 0$. Suppose $f \in C^{0}(\oo{z - h}{z + h}, \RR)$ is such that $f$ has a series expansion around $z$ of the shape
 $$
 f(z + x) = z + x - \alpha x \abs{x}^{p} + \beta x \abs{x}^{p + q} + o(\abs{x}^{p + q + 1}),
@@ -29,10 +29,9 @@ $$
 \end{array}\right.
 $$
 The result for the case $q = p$ is subject to $\alpha^{2} (p + 1) \neq 2 \beta$.
-@@
+}
 
-## Proof
-
+\proof{
 Let $x_{0} \in \RR$ and introduce the sequence $y_{k} = x_{k} - z$. Then $(y_{k})$ satisfies the recursion
 $$
 y_{k+1} = f(z + y_{k}) - z = g(y_{k}),
@@ -95,6 +94,7 @@ $$
 \displaystyle \frac{1}{(\alpha p n)^{1/p}} - \frac{\alpha^{2} (p + 1)}{2 (\alpha p)^{2 + 1/p}} \frac{\ln n}{n^{1 + 1/p}} + o\left(\frac{\ln n}{n^{1 + 1/p}}\right) & \text{if } q > p.
 \end{array}\right.
 $$
+}
 
 ## Example
 Let $u_{0} \in \RR$ and define $(u_{k})$ via
