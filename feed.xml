@@ -86,27 +86,6 @@
 
 <item>
   <title>
-    <![CDATA[  Curriculum Vitae  ]]>
-  </title>
-  <link> https://alexandremagueresse.github.io/curriculum_vitae/index.html </link>
-  <guid> https://alexandremagueresse.github.io/curriculum_vitae/index.html </guid>
-  <description>
-    <![CDATA[  Curriculum Vitae  ]]>
-  </description>  
-    
-  <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>  
-  
-  <author> alexandre.magueresse@gmail.com </author>
-  
-  
-  <atom:author>
-    <atom:name>Alexandre Magueresse</atom:name>
-  </atom:author>
-        
-</item>
-
-<item>
-  <title>
     <![CDATA[  Alexandre Magueresse  ]]>
   </title>
   <link> https://alexandremagueresse.github.io/index.html </link>
@@ -134,6 +113,27 @@
   <guid> https://alexandremagueresse.github.io/notes/small_steps/index.html </guid>
   <description>
     <![CDATA[  Method of small steps  ]]>
+  </description>  
+    
+  <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>  
+  
+  <author> alexandre.magueresse@gmail.com </author>
+  
+  
+  <atom:author>
+    <atom:name>Alexandre Magueresse</atom:name>
+  </atom:author>
+        
+</item>
+
+<item>
+  <title>
+    <![CDATA[  CV  ]]>
+  </title>
+  <link> https://alexandremagueresse.github.io/cv/index.html </link>
+  <guid> https://alexandremagueresse.github.io/cv/index.html </guid>
+  <description>
+    <![CDATA[  CV  ]]>
   </description>  
     
   <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>  
