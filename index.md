@@ -22,12 +22,12 @@ tags = ["research"]
   </div>
   <div class="column-right">
 ~~~
-I am a PhD student in Computational Mathematics at Monash University.
+I am a postdoctoral researcher in numerical methods for partial differential equations at RWTH Aachen University.
 
-I am working under the supervision of Prof. Santiago Badia on the minimisation of energy functionals in nonlinear approximation spaces. My research focuses on 
-* The design of nonlinear approximation spaces (neural networks, tensor-product free-knot B-splines, sparse grids),
-* The minimisation of energy functionals coming from self-adjoint, elliptic partial differential equations in such spaces,
-* The analysis of the stability and convergence of these schemes.
+Under the supervision of Prof. Markus Bachmayr, my current work focuses on the approximation of high-dimensional partial differential equations using low-rank techniques and neural networks. My research centers on
+* the development of nonlinear approximation spaces, including neural networks, adaptive meshes, and free-knot B-splines;
+* the construction of numerical schemes for solving partial differential equations within these spaces;
+* the analysis of stability, convergence, and approximation properties of the resulting methods.
 ~~~
   </div>
 </div>
